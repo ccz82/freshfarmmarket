@@ -1,0 +1,63 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <form id="profile-form" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.FullName" class="form-control" placeholder />
+                <label asp-for="Input.FullName" class="form-label">Full Name</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.CreditCardNumber" class="form-control" placeholder />
+                <label asp-for="Input.CreditCardNumber" class="form-label">Credit Card Number</label>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Input.Gender" class="form-label"></label>
+                <select asp-for="Input.Gender" class="form-select">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+                <span asp-validation-for="Input.Gender" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.MobileNumber" class="form-control" placeholder="Please enter your phone number."/>
+                <label asp-for="Input.MobileNumber" class="form-label">Mobile Number</label>
+                <span asp-validation-for="Input.MobileNumber" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.DeliveryAddress" class="form-control" />
+                <label asp-for="Input.DeliveryAddress"></label>
+                <span asp-validation-for="Input.DeliveryAddress" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.Photo" class="form-label">Photo</label>
+                <input asp-for="Input.Photo" type="file" class="form-control" accept="image/*" />
+                <span asp-validation-for="Input.Photo" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <img id="photoPreview" src="@Model.Input.PhotoUrl" alt="Profile Photo Preview" style="max-width: 200px; display: block;" />
+            </div>
+            <div class="form-floating mb-3">
+                <textarea asp-for="Input.AboutMe" class="form-control" style="height: 120px"></textarea>
+                <label asp-for="Input.AboutMe"></label>
+                <span asp-validation-for="Input.AboutMe" class="text-danger"></span>
+            </div>
+            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
