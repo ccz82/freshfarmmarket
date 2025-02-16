@@ -17,16 +17,22 @@ namespace FreshFarmMarket.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<FreshFarmMarketUser> _userManager;
         private readonly SignInManager<FreshFarmMarketUser> _signInManager;
         private readonly IWebHostEnvironment _environment;
+        private readonly IConfiguration _configuration;
+        private readonly EncryptionService _encryptionService;
 
         public IndexModel(
             UserManager<FreshFarmMarketUser> userManager,
             SignInManager<FreshFarmMarketUser> signInManager,
-            IWebHostEnvironment environment
+            IWebHostEnvironment environment,
+            IConfiguration configuration,
+            EncryptionService encryptionService
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _environment = environment;
+            _configuration = configuration;
+            _encryptionService = encryptionService;
         }
 
         /// <summary>
@@ -114,7 +120,7 @@ namespace FreshFarmMarket.Areas.Identity.Pages.Account.Manage
             Input = new InputModel
             {
                 FullName = user.FullName,
-                CreditCardNumber = string.Empty,
+                CreditCardNumber = _encryptionService.Decrypt(user.CreditCardNumber),
                 Gender = user.Gender,
                 MobileNumber = user.MobileNumber,
                 DeliveryAddress = user.DeliveryAddress,

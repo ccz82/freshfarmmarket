@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using FreshFarmMarket;
 using FreshFarmMarket.Data;
 using FreshFarmMarket.Services;
@@ -28,13 +30,20 @@ builder.Services.Configure<SecurityStampValidatorOptions>(options =>
     options.ValidationInterval = TimeSpan.FromMinutes(1)
 );
 
+builder.Services.Configure<EncryptionSettings>(options =>
+{
+    options.Key = builder.Configuration["EncryptionKey"];
+    options.IV = builder.Configuration["EncryptionIv"];
+});
+builder.Services.AddScoped<EncryptionService>();
+
 builder.Services.AddTransient<IEmailSender, MailKitEmailSender>();
 builder.Services.Configure<MailKitEmailSenderOptions>(options =>
 {
     options.Host_Address = "sandbox.smtp.mailtrap.io";
     options.Host_Port = 587;
-    options.Host_Username = "ad3e80d2c6c335";
-    options.Host_Password = "2f2a328d61dfd4";
+    options.Host_Username = builder.Configuration["EmailSmtpUsername"];
+    options.Host_Password = builder.Configuration["EmailSmtpPassword"];
     options.Sender_EMail = "support@freshfarmmarket.com";
     options.Sender_Name = "Fresh Farm Market";
 });
@@ -64,7 +73,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     // Cookie settings.
     options.Cookie.HttpOnly = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
 
     options.LoginPath = "/Identity/Account/Login";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";

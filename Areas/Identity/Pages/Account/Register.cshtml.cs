@@ -31,6 +31,7 @@ namespace FreshFarmMarket.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly IWebHostEnvironment _environment;
+        private readonly EncryptionService _encryptionService;
 
         public RegisterModel(
             UserManager<FreshFarmMarketUser> userManager,
@@ -38,7 +39,8 @@ namespace FreshFarmMarket.Areas.Identity.Pages.Account
             SignInManager<FreshFarmMarketUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IWebHostEnvironment environment
+            IWebHostEnvironment environment,
+            EncryptionService encryptionService
         )
         {
             _userManager = userManager;
@@ -48,6 +50,7 @@ namespace FreshFarmMarket.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _environment = environment;
+            _encryptionService = encryptionService;
         }
 
         /// <summary>
@@ -213,7 +216,7 @@ namespace FreshFarmMarket.Areas.Identity.Pages.Account
                 user.PhotoUrl = "/uploads/" + fileName;
 
                 user.FullName = Input.FullName;
-                user.CreditCardNumber = BCrypt.Net.BCrypt.HashPassword(Input.CreditCardNumber);
+                user.CreditCardNumber = _encryptionService.Encrypt(Input.CreditCardNumber);
                 user.Gender = Input.Gender;
                 user.MobileNumber = Input.MobileNumber;
                 user.DeliveryAddress = Input.DeliveryAddress;
